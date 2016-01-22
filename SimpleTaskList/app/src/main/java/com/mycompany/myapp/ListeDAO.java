@@ -20,7 +20,7 @@ public class ListeDAO extends DAOBase
 		Cursor listes = mDb.rawQuery("select "+MyListDBHandler.LIST_DESCRIPTION+
 									" from "+MyListDBHandler.LIST_TABLE_NAME+
 									" where "+MyListDBHandler.LIST_ID+
-									" =?",new String[]{String.valueOf(id)});
+									" = ?",new String[]{String.valueOf(id)});
 		if(listes.moveToFirst())
 			description = listes.getString(0);
 		else
@@ -32,7 +32,7 @@ public class ListeDAO extends DAOBase
 		mDb.rawQuery("update "+MyListDBHandler.LIST_TABLE_NAME+
 					" set "+MyListDBHandler.LIST_DESCRIPTION+" = ?"+
 					" where "+MyListDBHandler.LIST_ID+" = ?",
-					new String[]{String.valueOf(liste.getId()),liste.getDescription()});
+					new String[]{liste.getDescription(),String.valueOf(liste.getId())});
 	}
 
 	public void delete(long id){
