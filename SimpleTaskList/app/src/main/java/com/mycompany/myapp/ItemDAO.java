@@ -16,15 +16,18 @@ public class ItemDAO extends DAOBase {
 
     public void create(ItemDTO item){
         int isDone = (item.isDone())? 1 : 0;
+        open();
         mDb.rawQuery("insert into " + MyListDBHandler.LIST_ITEM_TABLE_NAME +
                 ", " + MyListDBHandler.LIST_ITEM_DESC +
                 ", " + MyListDBHandler.LIST_ITEM_DONE +
                 ", " + MyListDBHandler.LIST_ITEM_LIST +
                 " values (?, ?, ?)", new String[]{item.getDescription(),
                 String.valueOf(item.isDone()), String.valueOf(item.getListeId())});
+        close();
     }
 
     public ItemDTO read(long id){
+        open();
         Cursor items = mDb.rawQuery("select "+MyListDBHandler.LIST_ITEM_DESC+
                 ", "+MyListDBHandler.LIST_ITEM_DONE+
                 ", "+MyListDBHandler.LIST_ITEM_LIST+
@@ -35,12 +38,13 @@ public class ItemDAO extends DAOBase {
             return new ItemDTO(id,items.getLong(2),items.getString(0),
                                 (items.getLong(1)==1));
         }
-        else
-            return null;
+        close();
+        return null;
     }
 
     public void update(ItemDTO item){
         int isDone = (item.isDone())? 1 : 0;
+        open();
         mDb.rawQuery("update "+MyListDBHandler.LIST_ITEM_TABLE_NAME+
                         " set "+MyListDBHandler.LIST_ITEM_DESC+" = ?"+
                         ", "+MyListDBHandler.LIST_ITEM_DONE+" = ?"+
@@ -48,20 +52,24 @@ public class ItemDAO extends DAOBase {
                         " where "+MyListDBHandler.LIST_ITEM_ID+" = ?",
                         new String[]{item.getDescription(),String.valueOf(isDone),
                         String.valueOf(item.getListeId()), String.valueOf(item.getId())});
+        close();
     }
 
     public void delete(long id){
+        open();
         mDb.rawQuery("delete from "+MyListDBHandler.LIST_ITEM_TABLE_NAME+
                     " where "+MyListDBHandler.LIST_ITEM_ID+
                     " = ?",new String[]{String.valueOf(id)});
+        close();
     }
 
-    public Collection<ItemDTO> getListItems(long listeId){
+    public ArrayList<ItemDTO> getListItems(long listeId){
         ArrayList<ItemDTO> itemsCollection=null;
+        open();
         Cursor items = mDb.rawQuery("select "+MyListDBHandler.LIST_ITEM_DESC+
                 ", "+MyListDBHandler.LIST_ITEM_DONE+
                 ", "+MyListDBHandler.LIST_ITEM_ID+
-                " from "+MyListDBHandler.LIST_TABLE_NAME+
+                " from "+MyListDBHandler.LIST_ITEM_TABLE_NAME+
                 " where "+MyListDBHandler.LIST_ITEM_ID+
                 " = ?",new String[]{String.valueOf(listeId)});
         while(items.moveToNext()) {
@@ -70,6 +78,7 @@ public class ItemDAO extends DAOBase {
             itemsCollection.add(new ItemDTO(items.getLong(2), listeId, items.getString(0),
                     (items.getLong(1) == 1)));
         }
+        close();
         return itemsCollection;
     }
     public Collection<ItemDTO> getListItems(ListeDTO liste){
