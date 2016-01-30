@@ -2,12 +2,12 @@ package com.mycompany.myapp;
 
 public class ItemDTO
 {
-	private long id;
-	private long listeId;
+	private int id;
+	private int listeId;
 	private String description;
 	private boolean done;
 
-	public ItemDTO(long id, long listeId, String description, boolean done)
+	public ItemDTO(int id, int listeId, String description, boolean done)
 	{
 		this.id = id;
 		this.listeId = listeId;
@@ -15,22 +15,22 @@ public class ItemDTO
 		this.done = done;
 	}
 
-	public void setId(long id)
+	public void setId(int id)
 	{
 		this.id = id;
 	}
 
-	public long getId()
+	public int getId()
 	{
 		return id;
 	}
 
-	public void setListeId(long listeId)
+	public void setListeId(int listeId)
 	{
 		this.listeId = listeId;
 	}
 
-	public long getListeId()
+	public int getListeId()
 	{
 		return listeId;
 	}

@@ -4,22 +4,22 @@ import java.util.*;
 
 public class ListeDTO
 {
-	private long id;
+	private int id;
 	private String description;
 	private Collection<ItemDTO> listItem;
 
-	public ListeDTO(long id, String description)
+	public ListeDTO(int id, String description)
 	{
 		this.id = id;
 		this.description = description;
 	}
 
-	public void setId(long id)
+	public void setId(int id)
 	{
 		this.id = id;
 	}
 
-	public long getId()
+	public int getId()
 	{
 		return id;
 	}

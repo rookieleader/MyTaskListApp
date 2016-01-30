@@ -14,19 +14,19 @@ public class ListeDAO extends DAOBase
 
 	public void create(ListeDTO liste){
 		open();
-		mDb.rawQuery("insert into "+MyListDBHandler.LIST_TABLE_NAME+
-					", "+MyListDBHandler.LIST_DESCRIPTION+
-					" values (?)", new String[]{liste.getDescription()});
+		ContentValues values = new ContentValues();
+		values.put(MyListDBHandler.LIST_DESCRIPTION, liste.getDescription());
+		mDb.insert(MyListDBHandler.LIST_TABLE_NAME,null,values);
 		close();
 	}
 
-	public ListeDTO read(long id){
+	public ListeDTO read(int id){
 		String description;
 		open();
-		Cursor listes = mDb.rawQuery("select "+MyListDBHandler.LIST_DESCRIPTION+
-									" from "+MyListDBHandler.LIST_TABLE_NAME+
-									" where "+MyListDBHandler.LIST_ID+
-									" = ?",new String[]{String.valueOf(id)});
+		Cursor listes = mDb.rawQuery("select ? from ? where ? = ?",
+				new String[]{MyListDBHandler.LIST_DESCRIPTION,
+				MyListDBHandler.LIST_TABLE_NAME,MyListDBHandler.LIST_ID,
+				String.valueOf(id)});
 		if(listes.moveToFirst()) {
 			description = listes.getString(0);
 			close();
@@ -37,35 +37,34 @@ public class ListeDAO extends DAOBase
 
 	public void update(ListeDTO liste){
 		open();
-		mDb.rawQuery("update " + MyListDBHandler.LIST_TABLE_NAME +
-						" set " + MyListDBHandler.LIST_DESCRIPTION + " = ?" +
-						" where " + MyListDBHandler.LIST_ID + " = ?",
-				new String[]{liste.getDescription(), String.valueOf(liste.getId())});
+		ContentValues values = new ContentValues();
+		values.put(MyListDBHandler.LIST_DESCRIPTION, liste.getDescription());
+		mDb.update(MyListDBHandler.LIST_TABLE_NAME,values,MyListDBHandler.LIST_ID +
+				" = " + String.valueOf(liste.getId()),null);
 		close();
 	}
 
-	public void delete(long id){
+	public void delete(int id){
 		//first delete items
 		open();
-		mDb.rawQuery("delete from " + MyListDBHandler.LIST_ITEM_TABLE_NAME +
-				" where " + MyListDBHandler.LIST_ITEM_LIST +
-				" = ?", new String[]{String.valueOf(id)});
-		mDb.rawQuery("delete from "+MyListDBHandler.LIST_TABLE_NAME+
-					" where "+MyListDBHandler.LIST_ID+
-					" = ?",new String[]{String.valueOf(id)});
+		ContentValues values = new ContentValues();
+		mDb.delete(MyListDBHandler.LIST_ITEM_TABLE_NAME,
+				MyListDBHandler.LIST_ITEM_LIST + " = " + String.valueOf(id), null);
+		mDb.delete(MyListDBHandler.LIST_TABLE_NAME,
+				MyListDBHandler.LIST_ID + " = " + String.valueOf(id), null);
 		close();
 	}
 
 	public ArrayList<ListeDTO> readAll(){
 		ArrayList<ListeDTO> listesCollection=null;
 		open();
-		Cursor items = mDb.rawQuery("select "+MyListDBHandler.LIST_ID+
-				", "+MyListDBHandler.LIST_DESCRIPTION+
-				" from "+MyListDBHandler.LIST_TABLE_NAME,null);
+		Cursor items = mDb.query(MyListDBHandler.LIST_TABLE_NAME,
+				new String[]{MyListDBHandler.LIST_ID, MyListDBHandler.LIST_DESCRIPTION},
+				null, null, null, null, null, null);
 		while(items.moveToNext()) {
 			if (null == listesCollection)
 				listesCollection = new ArrayList<ListeDTO>();
-			ListeDTO liste = new ListeDTO(items.getLong(0), items.getString(1));
+			ListeDTO liste = new ListeDTO(items.getInt(0), items.getString(1));
 			listesCollection.add(liste);
 		}
 		close();

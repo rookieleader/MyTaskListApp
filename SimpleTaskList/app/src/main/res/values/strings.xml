@@ -3,5 +3,9 @@
 
     <string name="app_name">SimpleTaskList</string>
     <string name="hello_world">Hello world!</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="liste_fragment_title">Ajouter une liste</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

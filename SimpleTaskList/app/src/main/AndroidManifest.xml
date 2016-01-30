@@ -19,4 +19,6 @@
         <activity android:name=".ItemActivity" />
     </application>
 
+    <uses-sdk android:minSdkVersion="11"/>
+
 </manifest>
