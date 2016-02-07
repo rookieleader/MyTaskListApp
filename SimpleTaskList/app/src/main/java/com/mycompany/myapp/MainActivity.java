@@ -1,19 +1,19 @@
 package com.mycompany.myapp;
 
-import android.app.*;
-import android.os.*;
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class MainActivity extends Activity implements ListeCreateDialogFragment.ListeCreateDialogListener
 {
@@ -21,6 +21,7 @@ public class MainActivity extends Activity implements ListeCreateDialogFragment.
     ListView listViewListes;
     ActionMode mActionMode;
     int selectedPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -49,6 +50,19 @@ public class MainActivity extends Activity implements ListeCreateDialogFragment.
                 return true;
             }
         });
+        listViewListes.setOnItemClickListener(new ListView.OnItemClickListener() {
+            // Called when the user long-clicks on someView
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // Start the CAB using the ActionMode.Callback defined above
+                ListeArrayAdapter listeAdapter = (ListeArrayAdapter)listViewListes.getAdapter();
+                ListeDTO liste = listeAdapter.getItem(position);
+
+                Intent navToItemDetail = new Intent(MainActivity.this,ItemActivity.class);
+                navToItemDetail.putExtra(MyListDBHandler.LIST_ID,liste.getId());
+                startActivity(navToItemDetail);
+            }
+        });
     }
 
     @Override
@@ -63,9 +77,7 @@ public class MainActivity extends Activity implements ListeCreateDialogFragment.
         switch (item.getItemId()) {
             case R.id.action_add:
                 DialogFragment newFragment = new ListeCreateDialogFragment();
-                newFragment.show(getFragmentManager(),"add_liste");
-                return true;
-            case R.id.action_delete:
+                newFragment.show(getFragmentManager(),"add_action");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

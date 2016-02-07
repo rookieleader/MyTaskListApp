@@ -23,10 +23,8 @@ public class ListeDAO extends DAOBase
 	public ListeDTO read(int id){
 		String description;
 		open();
-		Cursor listes = mDb.rawQuery("select ? from ? where ? = ?",
-				new String[]{MyListDBHandler.LIST_DESCRIPTION,
-				MyListDBHandler.LIST_TABLE_NAME,MyListDBHandler.LIST_ID,
-				String.valueOf(id)});
+		Cursor listes = mDb.query(MyListDBHandler.LIST_TABLE_NAME,new String[]{MyListDBHandler.LIST_DESCRIPTION},
+				MyListDBHandler.LIST_ID + "=?",new String[] {String.valueOf(id)},null,null,null);
 		if(listes.moveToFirst()) {
 			description = listes.getString(0);
 			close();
@@ -47,7 +45,6 @@ public class ListeDAO extends DAOBase
 	public void delete(int id){
 		//first delete items
 		open();
-		ContentValues values = new ContentValues();
 		mDb.delete(MyListDBHandler.LIST_ITEM_TABLE_NAME,
 				MyListDBHandler.LIST_ITEM_LIST + " = " + String.valueOf(id), null);
 		mDb.delete(MyListDBHandler.LIST_TABLE_NAME,

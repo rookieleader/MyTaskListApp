@@ -37,6 +37,16 @@ public class ItemArrayAdapter extends ArrayAdapter<ItemDTO> {
             rowView = inflater.inflate(R.layout.itemrowlayout,null);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.isDone = (CheckBox) rowView.findViewById(R.id.checkBoxIsDone);
+            viewHolder.isDone.setTag(position);
+            viewHolder.isDone.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    CheckBox cb = (CheckBox) v ;
+                    ItemDTO item = (ItemDTO) items.get((int) cb.getTag());
+                    item.setDone(cb.isChecked());
+                    ItemDAO itemDAO = new ItemDAO(context);
+                    itemDAO.update(item);
+                }
+            });
             viewHolder.description = (TextView) rowView.findViewById(R.id.textViewItemDesc);
             rowView.setTag(viewHolder);
         }
